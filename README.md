@@ -29,17 +29,6 @@ void main() async {
 }
 ```
 
-## Using remotedev
-
-Use the Javascript [Remote Devtools](https://github.com/zalmoxisus/remotedev-server) package. Start the remotedev server on your machine
-
-```bash
-npm install -g remotedev-server
-remotedev --port 8000
-```
-
-Run your application. It will connect to the remotedev server. You can now debug your flutter_bloc application by opening up `http://localhost:8000` in a web browser.
-
 ## Making your Events and States Mappable
 
 Events and States have to implements `Mappable`:
@@ -63,6 +52,17 @@ class CounterState extends Equatable implements Mappable {
       };
 }
 ```
+
+## Using remotedev
+
+Use the Javascript [Remote Devtools](https://github.com/zalmoxisus/remotedev-server) package. Start the remotedev server on your machine
+
+```bash
+npm install -g remotedev-server
+remotedev --port 8000
+```
+
+Run your application. It will connect to the remotedev server. You can now debug your flutter_bloc application by opening up `http://localhost:8000` in a web browser.
 
 ## Examples
 
