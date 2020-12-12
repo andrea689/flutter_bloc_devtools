@@ -162,9 +162,6 @@ class RemoteDevToolsObserver extends BlocObserver {
     if (action == null) {
       return null;
     }
-    if (action is String) {
-      return action;
-    }
     final jsonOrNull = _maybeToJson(action);
 
     var actionName = action.toString();
