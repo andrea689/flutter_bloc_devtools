@@ -4,7 +4,7 @@ homepage: https://github.com/andrea689/flutter_bloc_devtools/
 version: 0.1.0
 
 environment:
-  sdk: '>=2.0.0 <3.0.0'
+  sdk: '>=2.3.0 <3.0.0'
   
 dependencies:
   bloc: ^6.1.0
