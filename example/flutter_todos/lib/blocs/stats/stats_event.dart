@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_todos/models/models.dart';
 import 'package:flutter_bloc_devtools/flutter_bloc_devtools.dart';
 
-abstract class StatsEvent extends Equatable implements Mappable {
+abstract class StatsEvent extends Equatable {
   const StatsEvent();
 
   @override
-  Map<String, dynamic> toMap() => {};
+  Map<String, dynamic> toJson() => {};
 }
 
 class StatsUpdated extends StatsEvent {
@@ -18,7 +18,7 @@ class StatsUpdated extends StatsEvent {
   List<Object> get props => [todos];
 
   @override
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         'todos': todos.map((e) => e.toEntity().toJson()).toList(),
       };
 }

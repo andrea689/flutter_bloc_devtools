@@ -2,14 +2,14 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_todos/models/models.dart';
 import 'package:flutter_bloc_devtools/flutter_bloc_devtools.dart';
 
-abstract class TodosState extends Equatable implements Mappable {
+abstract class TodosState extends Equatable {
   const TodosState();
 
   @override
   List<Object> get props => [];
 
   @override
-  Map<String, dynamic> toMap() => {};
+  Map<String, dynamic> toJson() => {};
 }
 
 class TodosLoadInProgress extends TodosState {}
@@ -23,7 +23,7 @@ class TodosLoadSuccess extends TodosState {
   List<Object> get props => [todos];
 
   @override
-  Map<String, dynamic> toMap() =>
+  Map<String, dynamic> toJson() =>
       {'todos': todos.map((e) => e.toEntity().toJson()).toList()};
 }
 

@@ -1,6 +1,6 @@
 part of 'counter_bloc.dart';
 
-class CounterState extends Equatable implements Mappable {
+class CounterState extends Equatable {
   final int counter;
 
   const CounterState({
@@ -20,7 +20,7 @@ class CounterState extends Equatable implements Mappable {
       ];
 
   @override
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         'counter': counter,
       };
 }
