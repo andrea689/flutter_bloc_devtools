@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_todos/models/models.dart';
 import 'package:flutter_bloc_devtools/flutter_bloc_devtools.dart';
 
-abstract class FilteredTodosEvent extends Equatable implements Mappable {
+abstract class FilteredTodosEvent extends Equatable {
   const FilteredTodosEvent();
 
   @override
-  Map<String, dynamic> toMap() => {};
+  Map<String, dynamic> toJson() => {};
 }
 
 class FilterUpdated extends FilteredTodosEvent {
@@ -18,7 +18,7 @@ class FilterUpdated extends FilteredTodosEvent {
   List<Object> get props => [filter];
 
   @override
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         'filter': filter.toString().substring('VisibilityFilter.'.length),
       };
 }
@@ -32,7 +32,7 @@ class TodosUpdated extends FilteredTodosEvent {
   List<Object> get props => [todos];
 
   @override
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         'todos': todos.map((e) => e.toEntity().toJson()).toList(),
       };
 }

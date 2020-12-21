@@ -1,13 +1,13 @@
 part of 'counter_bloc.dart';
 
-abstract class CounterEvent extends Equatable implements Mappable {
+abstract class CounterEvent extends Equatable {
   const CounterEvent();
 
   @override
   List<Object> get props => [];
 
   @override
-  Map<String, dynamic> toMap() => {};
+  Map<String, dynamic> toJson() => {};
 }
 
 class IncrementCounterEvent extends CounterEvent {}

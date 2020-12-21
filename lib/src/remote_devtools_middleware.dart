@@ -18,10 +18,6 @@ enum RemoteDevToolsStatus {
   started
 }
 
-abstract class Mappable {
-  Map<String, dynamic> toMap();
-}
-
 class RemoteDevToolsObserver extends BlocObserver {
   ///
   /// The remote-devtools server to connect to. Should include
@@ -110,29 +106,22 @@ class RemoteDevToolsObserver extends BlocObserver {
     final message = {'type': type, 'id': socket.id, 'name': instanceName};
     final blocName = _getBlocName(bloc);
 
-    if (state != null) {
-      /// Add or update Bloc state
-      if (state is Mappable) {
-        _appState[blocName] = state.toMap();
-        message['payload'] = jsonEncode(_appState);
-      } else {
-        _appState[blocName] = state.toString();
-        message['payload'] = jsonEncode(_appState);
-      }
-    } else {
+    if (state == null) {
       /// Remove Bloc state
       if (_appState.containsKey(blocName)) {
         _removeBlocName(bloc);
         _appState.remove(blocName);
-        message['payload'] = jsonEncode(_appState);
       }
+    } else {
+      /// Add or update Bloc state
+      _appState[blocName] = _maybeToJson(state) ?? state.toString();
     }
 
+    message['payload'] = jsonEncode(_appState);
+    message['action'] = _actionEncode(action);
+
     if (type == 'ACTION') {
-      message['action'] = _actionEncode(action);
       message['nextActionId'] = nextActionId;
-    } else if (action != null) {
-      message['action'] = action as String;
     }
     socket.emit(socket.id != null ? 'log' : 'log-noid', message);
   }
@@ -161,27 +150,30 @@ class RemoteDevToolsObserver extends BlocObserver {
     }
   }
 
-  String _actionEncode(dynamic action) {
-    if (action is Mappable) {
-      if (action.toMap().keys.isEmpty) {
-        return jsonEncode({
-          'type': action.runtimeType.toString(),
-        });
-      }
-      return jsonEncode({
-        'type': action.runtimeType.toString(),
-        'payload': action.toMap(),
-      });
+  Object _maybeToJson(dynamic object) {
+    try {
+      return object.toJson();
+    } on NoSuchMethodError {
+      return null;
     }
+  }
 
-    if (action.toString().contains('Instance of')) {
-      return jsonEncode({
-        'type': action.runtimeType.toString(),
-      });
+  String _actionEncode(Object action) {
+    if (action == null) {
+      return null;
+    }
+    final jsonOrNull = _maybeToJson(action);
+
+    var actionName = action.toString();
+    if (actionName.contains('Instance of')) {
+      actionName = action.runtimeType.toString();
     }
 
     return jsonEncode({
-      'type': action.toString(),
+      'type': actionName,
+      if (jsonOrNull != null &&
+          (jsonOrNull is Map ? jsonOrNull.isNotEmpty : true))
+        'payload': jsonOrNull,
     });
   }
 }
