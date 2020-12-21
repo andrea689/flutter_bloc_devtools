@@ -1,7 +1,7 @@
 name: flutter_bloc_devtools
-description: Remote DevTools for flutter_bloc. This package connects all Bloc (not working with Cubit) to the Remote Devtools Server, allowing the developer to inspect changes to the Blocs during runtime.
+description: Remote DevTools for flutter_bloc. This package connects all Bloc to the Remote Devtools Server, allowing the developer to inspect changes to the Blocs during runtime.
 homepage: https://github.com/andrea689/flutter_bloc_devtools/
-version: 0.1.0
+version: 0.1.1
 
 environment:
   sdk: '>=2.0.0 <3.0.0'

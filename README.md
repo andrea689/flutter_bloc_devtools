@@ -4,7 +4,7 @@ Remote Devtools support for Blocs of [flutter_bloc](https://github.com/felangel/
 
 N.B. `Cubit` is not supported
 
-![Devtools Demo](demo.gif)
+![Devtools Demo](https://github.com/andrea689/flutter_bloc_devtools/raw/main/demo.gif)
 
 ## Installation
 
@@ -66,5 +66,5 @@ Run your application. It will connect to the remotedev server. You can now debug
 
 ## Examples
 
-- [Counter](exampe/counter)
+- [Counter](example/counter)
 - [Todos](example/flutter_todos)
