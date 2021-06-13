@@ -12,7 +12,7 @@ Add the library to pubspec.yaml:
 
 ```yaml
 dependencies:
-  flutter_bloc_devtools: ^0.1.0
+  flutter_bloc_devtools: ^0.1.2
 ```
 
 ## BlocObserver configuration
@@ -31,7 +31,7 @@ void main() async {
 
 ## Making your Events and States Mappable
 
-Events and States have to implements `Mappable`:
+Events and States have to implement `Mappable`:
 
 ```dart
 class CounterState extends Equatable implements Mappable {

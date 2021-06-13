@@ -11,7 +11,7 @@ enum RemoteDevToolsStatus {
   /// Connected to remote, but not started
   connected,
 
-  /// Awating start response
+  /// Awaiting start response
   starting,
 
   /// Sending and receiving actions
@@ -82,7 +82,7 @@ class RemoteDevToolsObserver extends BlocObserver {
     return c.future;
   }
 
-  String _getBlocName(Cubit bloc) {
+  String _getBlocName(BlocBase bloc) {
     final blocName = bloc.runtimeType.toString();
     final blocHash = bloc.hashCode;
     if (_blocs.containsKey(blocName)) {
@@ -96,7 +96,7 @@ class RemoteDevToolsObserver extends BlocObserver {
     return _blocs[blocName][blocHash];
   }
 
-  void _removeBlocName(Cubit bloc) {
+  void _removeBlocName(BlocBase bloc) {
     final blocName = bloc.runtimeType.toString();
     final blocHash = bloc.hashCode;
     if (_blocs.containsKey(blocName) &&
@@ -106,7 +106,7 @@ class RemoteDevToolsObserver extends BlocObserver {
   }
 
   void _relay(String type,
-      [Cubit bloc, Object state, dynamic action, String nextActionId]) {
+      [BlocBase bloc, Object state, dynamic action, String nextActionId]) {
     final message = {'type': type, 'id': socket.id, 'name': instanceName};
     final blocName = _getBlocName(bloc);
 
@@ -146,18 +146,18 @@ class RemoteDevToolsObserver extends BlocObserver {
   }
 
   @override
-  void onCreate(Cubit cubit) {
-    super.onCreate(cubit);
+  void onCreate(BlocBase bloc) {
+    super.onCreate(bloc);
     if (status == RemoteDevToolsStatus.started) {
-      _relay('ACTION', cubit, cubit.state, 'OnCreate');
+      _relay('ACTION', bloc, bloc.state, 'OnCreate');
     }
   }
 
   @override
-  void onClose(Cubit cubit) {
-    super.onClose(cubit);
+  void onClose(BlocBase bloc) {
+    super.onClose(bloc);
     if (status == RemoteDevToolsStatus.started) {
-      _relay('ACTION', cubit, null, 'OnClose');
+      _relay('ACTION', bloc, null, 'OnClose');
     }
   }
 
