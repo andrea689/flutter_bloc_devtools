@@ -30,17 +30,17 @@ class RemoteDevToolsObserver extends BlocObserver {
   /// example.lan:8000
   ///
   final String _host;
-  SocketClusterWrapper socket;
-  String _channel;
+  SocketClusterWrapper? socket;
+  late String _channel;
   RemoteDevToolsStatus _status = RemoteDevToolsStatus.notConnected;
   RemoteDevToolsStatus get status => _status;
 
   final Map<String, Map<int, String>> _blocs = {};
-  final Map<String, dynamic> _appState = {};
+  final Map<String?, dynamic> _appState = {};
 
   /// The name that will appear in Instance Name in Dev Tools. If not specified,
   /// default to 'flutter'.
-  String instanceName;
+  String? instanceName;
 
   RemoteDevToolsObserver(
     this._host, {
@@ -53,7 +53,7 @@ class RemoteDevToolsObserver extends BlocObserver {
 
   Future<void> connect() async {
     _status = RemoteDevToolsStatus.connecting;
-    await socket.connect();
+    await socket!.connect();
     _status = RemoteDevToolsStatus.connected;
     _channel = await _login();
     _status = RemoteDevToolsStatus.starting;
@@ -63,15 +63,15 @@ class RemoteDevToolsObserver extends BlocObserver {
 
   Future<String> _login() {
     final c = Completer<String>();
-    socket.emit('login', 'master', (String name, dynamic error, dynamic data) {
-      c.complete(data as String);
+    socket!.emit('login', 'master', (String name, dynamic error, dynamic data) {
+      c.complete(data as String?);
     });
     return c.future;
   }
 
   Future<dynamic> _waitForStart() {
     final c = Completer();
-    socket.on(_channel, (String name, dynamic data) {
+    socket!.on(_channel, (String name, dynamic data) {
       if (data['type'] == 'START') {
         _status = RemoteDevToolsStatus.started;
         c.complete();
@@ -82,32 +82,32 @@ class RemoteDevToolsObserver extends BlocObserver {
     return c.future;
   }
 
-  String _getBlocName(BlocBase bloc) {
+  String? _getBlocName(BlocBase? bloc) {
     final blocName = bloc.runtimeType.toString();
     final blocHash = bloc.hashCode;
     if (_blocs.containsKey(blocName)) {
-      if (!_blocs[blocName].containsKey(blocHash)) {
-        _blocs[blocName][blocHash] =
-            '$blocName-${_blocs[blocName].keys.length}';
+      if (!_blocs[blocName]!.containsKey(blocHash)) {
+        _blocs[blocName]![blocHash] =
+            '$blocName-${_blocs[blocName]!.keys.length}';
       }
     } else {
       _blocs[blocName] = {blocHash: blocName};
     }
-    return _blocs[blocName][blocHash];
+    return _blocs[blocName]![blocHash];
   }
 
-  void _removeBlocName(BlocBase bloc) {
+  void _removeBlocName(BlocBase? bloc) {
     final blocName = bloc.runtimeType.toString();
     final blocHash = bloc.hashCode;
     if (_blocs.containsKey(blocName) &&
-        _blocs[blocName].containsKey(blocHash)) {
-      _blocs[blocName].remove(blocHash);
+        _blocs[blocName]!.containsKey(blocHash)) {
+      _blocs[blocName]!.remove(blocHash);
     }
   }
 
   void _relay(String type,
-      [BlocBase bloc, Object state, dynamic action, String nextActionId]) {
-    final message = {'type': type, 'id': socket.id, 'name': instanceName};
+      [BlocBase? bloc, Object? state, dynamic action, String? nextActionId]) {
+    final message = {'type': type, 'id': socket!.id, 'name': instanceName};
     final blocName = _getBlocName(bloc);
 
     if (state != null) {
@@ -134,7 +134,7 @@ class RemoteDevToolsObserver extends BlocObserver {
     } else if (action != null) {
       message['action'] = action as String;
     }
-    socket.emit(socket.id != null ? 'log' : 'log-noid', message);
+    socket!.emit(socket!.id != null ? 'log' : 'log-noid', message);
   }
 
   @override
