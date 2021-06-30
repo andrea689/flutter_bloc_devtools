@@ -71,7 +71,7 @@ class RemoteDevToolsObserver extends BlocObserver {
 
   Future<dynamic> _waitForStart() {
     final c = Completer();
-    socket!.on(_channel, (String name, dynamic data) {
+    socket!.on(_channel, (String? name, dynamic data) {
       if (data['type'] == 'START') {
         _status = RemoteDevToolsStatus.started;
         c.complete();
