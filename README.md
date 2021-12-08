@@ -2,7 +2,7 @@
 
 Remote Devtools support for Blocs of [flutter_bloc](https://github.com/felangel/bloc/tree/master/packages/flutter_bloc).
 
-N.B. `Cubit` is not supported
+N.B. `Cubit` is *now* supported
 
 ![Devtools Demo](https://github.com/andrea689/flutter_bloc_devtools/raw/main/demo.gif)
 
@@ -12,7 +12,7 @@ Add the library to pubspec.yaml:
 
 ```yaml
 dependencies:
-  flutter_bloc_devtools: ^0.1.0
+  flutter_bloc_devtools: ^0.2.0
 ```
 
 ## BlocObserver configuration
@@ -21,11 +21,10 @@ Add `RemoteDevToolsObserver` to your `Bloc.observer`:
 
 ```dart
 void main() async {
-  final observer = RemoteDevToolsObserver('192.168.1.7:8000');
-  await observer.connect();
-  Bloc.observer = observer;
-
-  runApp(const CounterApp());
+  BlocOverrides.runZoned(
+        () async => runApp(const CounterApp()),
+    blocObserver: RemoteDevToolsObserver('127.0.0.1:8000'),
+  );
 }
 ```
 
@@ -67,4 +66,4 @@ Run your application. It will connect to the remotedev server. You can now debug
 ## Examples
 
 - [Counter](example/counter)
-- [Todos](example/flutter_todos)
+
