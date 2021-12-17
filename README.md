@@ -8,6 +8,7 @@ This currently has rudimentary support for v8.0.0. It is a work in progress.
 - [ ] Doesn't deal well with enumerate types.
 - [ ] Works with flutter_todos tutorial, v8.
 - [ ] Write tests
+- [ ] Update the package in pub.dev
 
 Create an issue if you want to help.
 
@@ -26,8 +27,13 @@ Add the library to pubspec.yaml:
 
 ```yaml
 dependencies:
-  flutter_bloc_devtools: ^0.2.0
+  flutter_bloc_devtools:
+    git:
+      url: https://github.com/chonghorizons/flutter_bloc_devtools.git
+      ref: main
 ```
+
+Note: The version on pub.dev doesn't work with null safety and v8 of bloc.
 
 ## BlocObserver configuration
 
@@ -44,7 +50,7 @@ void main() async {
 
 ## Making your Events and States Mappable
 
-Events and States have to implements `Mappable`:
+Events and States ~~have to~~ may implement `Mappable`:
 
 ```dart
 class CounterState extends Equatable implements Mappable {
