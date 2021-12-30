@@ -4,7 +4,9 @@
 Fork of https://github.com/andrea689/flutter_bloc_devtools, which doesn't support v8.0.0 of bloc.
 This currently has rudimentary support for v8.0.0. It is a work in progress.
 
-- [x] I got it to work with the example code.
+NOTE: In general, I don't recommend using this devtool unless you have a large amount of blocs and messages to deal with. For a small number of blocs, it is easier just to use [BlocObserver](https://bloclibrary.dev/#/coreconcepts?id=blocobserver) to log all bloc actions, which takes about 5-10 minutes to setup. See examples in the tutorials in https://bloclibrary.dev/
+
+- [x] I got `flutter_bloc_devtools` to work with the example code. (see also the git branch "null_safety_migration")
 - [ ] Doesn't deal well with enumerate types.
 - [ ] Works with flutter_todos tutorial, v8.
 - [ ] Write tests
