@@ -33,6 +33,7 @@ class RemoteDevToolsObserver extends BlocObserver {
   SocketClusterWrapper socket;
   String _channel;
   RemoteDevToolsStatus _status = RemoteDevToolsStatus.notConnected;
+
   RemoteDevToolsStatus get status => _status;
 
   final Map<String, Map<int, String>> _blocs = {};
@@ -49,12 +50,15 @@ class RemoteDevToolsObserver extends BlocObserver {
   }) {
     socket ??= SocketClusterWrapper('ws://$_host/socketcluster/');
     instanceName ??= 'flutter';
+    connect();
   }
 
   Future<void> connect() async {
     _status = RemoteDevToolsStatus.connecting;
+    print('trying to connect to socket at $_host');
     await socket.connect();
     _status = RemoteDevToolsStatus.connected;
+    print('connected to socket at $_host');
     _channel = await _login();
     _status = RemoteDevToolsStatus.starting;
     _relay('START');
@@ -82,7 +86,7 @@ class RemoteDevToolsObserver extends BlocObserver {
     return c.future;
   }
 
-  String _getBlocName(Cubit bloc) {
+  String _getBlocName(BlocBase bloc) {
     final blocName = bloc.runtimeType.toString();
     final blocHash = bloc.hashCode;
     if (_blocs.containsKey(blocName)) {
@@ -96,7 +100,7 @@ class RemoteDevToolsObserver extends BlocObserver {
     return _blocs[blocName][blocHash];
   }
 
-  void _removeBlocName(Cubit bloc) {
+  void _removeBlocName(BlocBase bloc) {
     final blocName = bloc.runtimeType.toString();
     final blocHash = bloc.hashCode;
     if (_blocs.containsKey(blocName) &&
@@ -106,7 +110,7 @@ class RemoteDevToolsObserver extends BlocObserver {
   }
 
   void _relay(String type,
-      [Cubit bloc, Object state, dynamic action, String nextActionId]) {
+      [BlocBase bloc, Object state, dynamic action, String nextActionId]) {
     final message = {'type': type, 'id': socket.id, 'name': instanceName};
     final blocName = _getBlocName(bloc);
 
@@ -138,7 +142,7 @@ class RemoteDevToolsObserver extends BlocObserver {
   }
 
   @override
-  void onTransition(Bloc bloc, Transition transition) {
+  void onTransition(BlocBase bloc, Transition transition) {
     super.onTransition(bloc, transition);
     if (status == RemoteDevToolsStatus.started) {
       _relay('ACTION', bloc, transition.nextState, transition.event);
@@ -146,18 +150,18 @@ class RemoteDevToolsObserver extends BlocObserver {
   }
 
   @override
-  void onCreate(Cubit cubit) {
-    super.onCreate(cubit);
+  void onCreate(BlocBase bloc) {
+    super.onCreate(bloc);
     if (status == RemoteDevToolsStatus.started) {
-      _relay('ACTION', cubit, cubit.state, 'OnCreate');
+      _relay('ACTION', bloc, bloc.state, 'OnCreate');
     }
   }
 
   @override
-  void onClose(Cubit cubit) {
-    super.onClose(cubit);
+  void onClose(BlocBase bloc) {
+    super.onClose(bloc);
     if (status == RemoteDevToolsStatus.started) {
-      _relay('ACTION', cubit, null, 'OnClose');
+      _relay('ACTION', bloc, null, 'OnClose');
     }
   }
 
